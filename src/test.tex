@@ -1,0 +1,182 @@
+\documentclass[12 pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amscd}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{physics}
+\usepackage[colorlinks]{hyperref}
+
+\theoremstyle{definition}
+\newtheorem{problem}{Problem}
+
+\newcommand{\Dv}[2]{\frac{\text{D}{#1}}{\text {D}{#2}}}
+
+\newcommand\restr[2]{{
+  \left.\kern-\nulldelimiterspace
+  #1 
+  \vphantom{\big|} 
+  \right|_{#2}
+  }}
+\newenvironment{solution}
+{\renewcommand\qedsymbol{$\blacksquare$}\begin{proof}[Solution]}
+{\end{proof}}
+
+\begin{document}
+
+\title{Fluid Derivations and Notes}
+\author{Lava Lamp Team}
+\date{May 2020}
+\maketitle
+\begin{proof}
+The continuity equation can be derived using conservation of mass. One formula for the mass of fluid within a given region $V$ with surface $S$ is \[\int_V \rho \;dV.\] , where $\rho$ is density. The negative derivative of this integral with respect to time is the rate at which mass exits this region, equal to \[-\int_V \pdv{\rho}{t} \;dV.\]
+\\
+\noindent
+, where $t$ is time. Now, we express an alternate formula for this very same quantity. We notice that the amount of mass lost through an infinitesimal $dS$ is $\rho\vec{v}\cdot\hat{n}$. So, the loss of mass is equivalent, by the divergence theorem, to:
+\begin{align*}
+\int_S \rho\vec{v}\cdot dS &= \int_V \nabla \cdot (\rho\vec{v}) dV
+\end{align*}
+\\
+\noindent
+, where $\vec{v}$ is velocity   . Because this equivalence applies for all regions, taking them to the limit as $V$ becomes infinitely small proves the continuity equation at all points:
+
+ \[\pdv{\rho}{t} + \nabla \cdot (\rho \vec{v}) = 0\] where $t$ is time, $\vec{v}$ is the fluid velocity field.
+\\\\
+\noindent
+Using the product rule, we can rewrite this as 
+
+\begin{align*}
+0 &= \pdv{\rho}{t} +  \vec{v}\cdot \nabla \rho + \rho\nabla \cdot \vec{v}\\ &= \pqty{\pdv{}{t} + \vec{v} \cdot 
+\nabla }(\rho) + \rho\nabla \cdot \vec{v} \\ &= \Dv{\rho}{t} + \rho\nabla\cdot\vec{v}
+\end{align*}
+\\
+\noindent
+So, 
+\begin{equation}\label{eq:continuitycondition}
+\Dv{\rho}{t} + \rho\nabla\cdot \vec{v}= 0
+\end{equation}
+\\
+\noindent
+\end{proof}
+
+\begin{proof}
+By the Cauchy momentum equation, 
+\[\Dv{\vec{v}}{t} = \frac{1}{\rho}\nabla\cdot\pmb{\sigma} + \vec{g},\] 
+
+where $\vec{g}$ is gravity, and $\pmb{\sigma}$ is the Cauchy stress tensor. Substituting $\pmb{\sigma} = - p\,\vb{I}+\pmb{\tau}$ into its isotropic and deviatoric stress components, we get 
+\begin{align}
+    \rho\Dv{\vec{v}}{t} &= \nabla\cdot \pmb{\sigma} + \rho \vec{g} \nonumber\\
+    &= - \nabla\cdot p\vb{I}+\nabla\cdot\pmb{\tau}  + \rho \vec g\nonumber\\
+    &= -\pdv{(p\delta_{j}^i)}{x_i}+\nabla \cdot \pmb{\tau}  + \rho\vec{g}\nonumber\\
+    &= -\pdv{p}{x_j}+\nabla \cdot \pmb{\tau}  + \rho\vec{g}\nonumber \\
+    &= - \nabla p+\nabla \cdot \pmb{\tau}  + \rho\vec{g} \label{eq:stressdecomposition}
+\end{align}
+where $p$ is the thermodynamic pressure.
+\\\\
+\noindent
+The deviatoric stress tensor, $\pmb{\tau}$, can be written as \[\pmb{\tau} = \zeta(\nabla\cdot\vec{v})\,\,\vb{I}+\mu\left(\nabla\vec{v}+\nabla\vec{v}\,^T - \frac{2}{3}(\nabla\cdot\vec{v})\,\,\vb{I}\right)\]
+where $\mu$ is the dynamic viscosity.
+Calculating the divergence of its components, we obtain:
+
+\begin{align*}
+    \nabla\cdot\nabla\vec{v} &= \pdv{}{x^i}\left(\pdv{v^j}{x_i}\right)  \\
+    &= \pdv{}{x^i}{x_i}v^j\\
+    &= \Delta \vec{v}\\\\
+    \nabla\cdot(\nabla\vec{v})^T &= \pdv{}{x^i}\left(\pdv{v^i}{x_j}\right)\\
+    &= \pdv{v^i}{x_j}{x^i}\\
+    &= \pdv{(\nabla\cdot\vec{v})}{x_j} \\
+    &= \nabla(\nabla\cdot\vec{v})\\\\
+    \nabla\cdot((\nabla\cdot\vec{v})\vb{I}) &= \nabla\cdot\left((\nabla\cdot\vec{v})\delta^k_{j}\right)\\
+    &= \pdv{(\nabla\cdot\vec{v})\delta^k_j}{x_k}\\
+    &= \pdv{(\nabla\cdot\vec{v})}{x_j}\\
+    &= \nabla(\nabla \cdot \vec{v})
+\end{align*}
+\noindent
+So, we find that 
+\begin{align*}
+\nabla\cdot\pmb{\tau} &= \zeta\nabla(\nabla \cdot \vec{v})+\mu\left(\Delta{\vec{v}} +\nabla(\nabla \cdot \vec{v}) - \frac{2}{3}\nabla(\nabla \cdot \vec{v})  \right) \\
+&= \mu\Delta\vec{v} +\left(\zeta + \frac{\mu}{3}\right)\nabla(\nabla \cdot \vec{v})
+\end{align*}
+\noindent
+Now, substituting $\nabla \cdot \pmb{\tau}$ into \eqref{eq:stressdecomposition}, we can finally obtain the Cauchy momentum equation in convective form:
+
+\begin{equation}
+\rho\Dv{\vec{v}}{t} = -\nabla p+\mu\Delta\vec{v} +(\zeta +\frac{\mu}{3})\nabla(\nabla \cdot \vec{v})  + \rho\vec{g}
+\end{equation}
+\end{proof}
+
+
+\begin{proof}
+We begin with the equation for total energy within a volume $V$ with surface $S$. The energy is the sum of two main quantities, and can be expressed as 
+\begin{align*}
+E &= \int_V \rho\mathcal{E} \, dV + \int_V \frac{1}{2}\rho v_iv^i \,dV \\
+&= \int_V \rho\left(\mathcal{E}+\frac{1}{2}v_iv^i\right) \, dV.
+\end{align*}
+
+And, 
+\begin{equation}\label{eq:dEdt}
+\dv{E}{t} = \int_V \rho\dv{}{t}\left(\mathcal{E}+\frac{1}{2} v_iv^i\right)dV
+\end{equation}
+\\
+\noindent
+These two terms refer to the internal energy and kinetic energy. The $\mathcal{E}$ is the internal energy per unit mass, and multiplying the second term by volumes gives the traditional $\frac{1}{2}mv^2$. We now express heat flux as a surface integral, and use the divergence theorem to simplify:
+
+\begin{align}
+    \Phi_E &= \int_S \rho\left(\mathcal{E}+\frac{1}{2}v_iv^i\right)v^j dS_j \nonumber\\
+    &= \int_V \pdv{}{x^j}\left[\rho\left(\mathcal{E}+\frac{1}{2}v_iv^i\right)v^j\right] dV \label{eq:phi_e}
+\end{align}
+\noindent
+Recall the first law of thermodynamics, which states that \begin{equation}\label{eq:firstthermodynamics}
+\dv{E}{t} + \Phi_E = \dot{W} -\dot{Q},
+\end{equation}
+where $\dot{W}$ is the net rate of work and $\dot{Q}$ is the heat flux. We can alternatively express $\dot{W}$ in terms forces and the velocity field. We also use the Cauchy stress tensor over the surface to represent work done with respect to pressure.
+\begin{align}
+    \dot{W} &= \int_V v^iF_i dV + \int_V v^i\sigma_i^j \,dS_j \nonumber\\
+    &= \int_V v^iF_i + \pdv{v^i\sigma^j_i}{x^j}\,dV \label{eq:W}
+\end{align}
+
+At any one point, $q^i$ can represent the heat flux density, the heat flux per volume. Assuming that the heat flux density is linearly related to the gradient of temperature, we find that there is some tensor relating the two. Denoting it $A_i^j$, we say that \[q^i = A_i^j  \pdv{T}{x^j}.\] Then, because we've assumed that the fluid is isotropic, the linear relation between the two should be an isotropic tensor. Since every rank two isotropic tensor is a scalar multiple of the Kronecker delta, we can therefore express our earlier equation as
+\begin{align*}
+\vec{q} &= -\kappa\delta_i^j \pdv{T}{x^j} \\
+&= -\kappa\pdv{T}{x^i} \\
+&= -\kappa\nabla T
+\end{align*} $\kappa$ is referred to as the thermal conductivity of the fluid. Notably, it is not a constant but varies over space and time. Now we express $\dot{Q}$ as the sum of the dot product of the heat flux and normal vector over the surface:
+
+\begin{align}
+\int_S q^i\,dS_i &= -\int_S \kappa\pdv{T}{x^i} \,dS_i \nonumber\\
+&= -\int_V \pdv{}{x^i}\left(\kappa\pdv{T}{x_i}\right)dV,\label{eq:q}
+\end{align}
+again using the divergence theorem. Now, we substitute equations \eqref{eq:dEdt}, \eqref{eq:phi_e}, \eqref{eq:W}, and \eqref{eq:q} into \eqref{eq:firstthermodynamics}, obtaining
+
+
+\[\int_V \dv{}{t}\left(\rho\mathcal{E}+\frac{1}{2}\rho v_iv^i\right) + \pdv{}{x^j}\left[\rho\left(\mathcal{E}+\frac{1}{2}v_iv^i\right)v^j\right]dV = \int_V v^iF_i + \pdv{v^i\sigma^j_i}{x^j} + \pdv{}{x^i}\left(\kappa\pdv{T}{x_i}\right) dV\]
+
+Since this is true for an arbitrary volume, the equivalence holds at every point as well, giving us that
+\begin{align*}
+    \dv{}{t}\left(\rho\left(\mathcal{E}+\frac{1}{2} v_iv^i\right)\right) + \pdv{}{x^j}\left[\rho\left(\mathcal{E}+\frac{1}{2}v_iv^i\right)v^j\right] &= v^iF_i + \pdv{v^i\sigma^j_i}{x^j} + \pdv{}{x^i}\left(\kappa\pdv{T}{x_i}\right) \\
+    \Dv{}{t}\left(\rho\left(\mathcal{E}+\frac{1}{2}v_iv^i\right)\right) &= v^iF_i  + \pdv{}{x^j}\left(v^i\sigma^j_i+\kappa\pdv{T}{x_j}\right)\\
+    \rho
+    \Dv{}{t}\left(\mathcal{E}+\frac{1}{2}v_iv^i\right) &= v^iF_i  + \pdv{}{x^j}\left(v^i\sigma^j_i+\kappa\pdv{T}{x_j}\right)
+\end{align*}
+
+\end{proof}
+
+
+\begin{proof}
+The Cauchy stress tensor $\pmb{\sigma}$ can be represented (in Einstein notation) as
+\[\pmb{\sigma}'_{j,ik} = \zeta_j\pqty{\pdv{v_i}{x^k}+\pdv{v_k}{x^i}-\frac{2}{3}\delta_{il}\pdv{v_l}{x^l}} + \mu\delta_{ik}\pdv{v_l}{x^l},\]
+where $\vec{v}$ is velocity of the fluid, $\pmb{\sigma}'_{j,ik}$ is the stress tensor for material $j$, $\zeta_j$ is the (homogeneous) viscosity of material $j$, and $\mu$ is the volume (bulk) viscosity. See above text on deviatoric stress tensor for more information. Note that $\displaystyle\pdv{v_l}{x_l} = \nabla\cdot\vb{v}$. We discussed but did not write any equations for the possibility of fluids that have different viscosities based on direction, but the corresponding equation would likely just have an extra rank for $\vb{\sigma}$ based on this new direction. Note that this new fluid can no longer be modeled by the Navier-Stokes equations, which assumes homogeneity within fluids.
+
+We can also develop an equation for the difference in pressures between the two fluids at their boundary surface.
+\[p_1-p_2 = \alpha\pqty{\frac{1}{R_1} + \frac{1}{R_2}} + \vb{n}^T\pqty{\pmb{\sigma}_1 - \pmb{\sigma}_2}\vb{n}.\]
+In other words, the difference in pressure is proportional to the sums of the curvatures of the two surfaces with one fluid, and has a term based on the difference in the stress tensor for two fluids.
+
+The diffusion equation (derivation \href{https://ceprofs.civil.tamu.edu/ssocolofsky/cven489/Downloads/Book/Ch1.pdf}{here}) is often written as
+\[\pdv{u}{t} = \alpha\nabla^2u,\]
+or alternatively (with both $u$ and $\phi$ representing concentration/density),
+\[\pdv{\phi(\vb{r},t)}{t} = \nabla\cdot\left[D(\phi,\vb{r})\,\nabla\phi(\vb{r},t)\right].\]
+This is directly analogous to the heat equation, with the $\alpha\nabla^2u$ component representing the fact that fluid moves from high to low density.
+\end{proof}
+\end{document}
